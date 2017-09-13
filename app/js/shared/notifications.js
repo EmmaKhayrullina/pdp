@@ -1,4 +1,4 @@
-class Notifications {
+export default class Notifications {
   constructor(el) {
     this.notifyElement = el;
   }
@@ -15,5 +15,4 @@ class Notifications {
   }
 }
 
-const notification = new Notifications($(".notification"))
-export { notification, Notifications };
+// const notification = new Notifications($(".notification"))

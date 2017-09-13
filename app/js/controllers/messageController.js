@@ -1,96 +1,69 @@
+import $ from "jquery";
+import { PATHS } from "../helpers/paths";
+import { storage } from "../helpers/storage";
 import Controller from "../lib/controller";
-import { notification, Notifications } from "../shared/notifications";
+import MessageModel from "../models/messageModel";
+import MessageView from "../views/messageView";
+import Notifications from "../shared/notifications";
 
-class MessageController extends Controller {
+export default class MessageController extends Controller {
   constructor() {
     super();
-    this.msg = this.wrapper.find(".msg-item");
-    this.actionLink = this.msg.find(".msg-link");
-    this.msgCheckbox = this.wrapper.find(".msg-item__checkbox");
-    this.setUpListeners();
-  }
+    this.msgView = new MessageView();
+    this.messageModel = new MessageModel();
+    this.notification = new Notifications($(".notification"));
 
-  setUpListeners() {
-    this.actionLink.on("click", this.msgActions.bind(this));
-  }
-
-  msgActions(e) {
-    e.preventDefault();
-    const link = $(e.target);
-    const msg = link.closest(".msg-item");
-    const id = msg.data("id");
-
-    if (link.hasClass("msg-link--toggle")) {
-      this.toggleMessage(link, msg);
-    }
-    if (link.hasClass("msg-link--star")) {
-      this.moveToStarred(id);
-    }
-    if (link.hasClass("msg-link--back")) {
-      this.moveToInbox(id);
-    }
-    if (link.hasClass("msg-link--remove")) {
-      this.moveToDeleted(id);
-    }
-  }
-
-  toggleMessage(link, msg) {
-    msg.find(".msg-item__text").stop(true, true).slideToggle();
-    link.toggleClass("msg-link--open");
+    this.msgView.on("message:star", this.moveToStarred.bind(this));
+    this.msgView.on("message:delete", this.moveToDeleted.bind(this));
+    this.msgView.on("message:inbox", this.moveToInbox.bind(this));
+    this.messageModel.on("change", this.updateModel.bind(this));
   }
 
   moveToStarred(id) {
-    const item = this.model.get(id);
-    const currentMsg = this.wrapper.find(`[data-id=${id}]`);
-    const starIcon = currentMsg.find(".msg-link--star");
+    const item = this.messageModel.get(id);
 
     if (!item.starred) {
-      item.status.push("starred");
-      notification.show("Status changed!");
+      this.starMessage(item, id);
+    } else {
+      this.unstarMessage(item, id);
     }
-    if (item.starred) {
-      const index = item.status.indexOf("starred");
-      if (index > -1) {
-        item.status.splice(index, 1);
-        notification.show("Status changed!");
-      }
+    this.msgView.markCurrentMgs(id);
+  }
 
-      if (window.location.pathname == "/starred") {
-        currentMsg.remove();
-      }
+  starMessage(item, id) {
+    this.messageModel.addStatus(item, "starred");
+    this.messageModel.update(id, { "starred": true });
+    this.notification.show("Move to starred!");
+  }
+
+  unstarMessage(item, id) {
+    if (PATHS.isStarred()) {
+      this.msgView.removeItem(id);
     }
 
-    starIcon.toggleClass("msg-link--marked");
-    this.model.update(id, "starred");
+    this.messageModel.removeStatus(item, "starred");
+    this.messageModel.update(id, { "starred": false });
+    this.notification.show("Remove from starred!");
   }
 
   moveToInbox(id) {
-    const changePropArr = ["inbox", "deleted"];
-    this.moveTo(id, changePropArr, "inbox");
-    notification.show("Back to inbox!");
+    const changeProps = {
+      "inbox": true,
+      "deleted": false
+    };
+    this.moveTo(id, changeProps, "inbox");
+    this.notification.show("Back to inbox!");
+    this.msgView.removeItem(id);
   }
 
   moveToDeleted(id) {
-    const changePropArr = ["deleted", "inbox", "starred"];
-    this.moveTo(id, changePropArr, "deleted");
-    notification.show("Moved to trash!");
-  }
-
-  checkedMessages() {
-    const arr = [];
-    Array.from(this.msgCheckbox).forEach(checkbox => {
-      if ($(checkbox).is(":checked")) {
-        arr.push(checkbox);
-      }
-    });
-    return arr;
-  }
-
-  changeMessageCheckbox(value) {
-    console.log(this.msgCheckbox);
-    this.msgCheckbox.prop("checked", value);
+    const changeProps = {
+      "deleted": true,
+      "inbox": false,
+      "starred": false
+    };
+    this.moveTo(id, changeProps, "deleted");
+    this.notification.show("Moved to trash!");
+    this.msgView.removeItem(id);
   }
 }
-
-const msgController = new MessageController();
-export { msgController, MessageController };

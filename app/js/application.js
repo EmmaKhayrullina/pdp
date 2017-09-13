@@ -4,15 +4,17 @@ import json from "../json/data.json";
 import { storage, Storage } from "./helpers/storage";
 
 import router from "page";
-import { navController, NavigationController } from "./controllers/navigationController";
-import { listController, ListController } from "./controllers/messageListController";
-import { msgController, MessageController } from "./controllers/messageController";
-import { actionsController, ActionsController } from "./controllers/actionsController";
-import { newMsgController, NewMessageController } from "./controllers/newMessageController";
+import NavigationController from "./controllers/navigationController";
+import MessageListController from "./controllers/messageListController";
+import MessageController from "./controllers/messageController";
+// import NewMessageController from "./controllers/newMessageController";
+import ActionsController from "./controllers/actionsController";
 
 if(!localStorage.length) {
   storage.set(json);
 }
+
+const listController = new MessageListController();
 
 router.redirect("/", "/inbox");
 router("/inbox", () => {
@@ -29,8 +31,7 @@ router("/deleted", () => {
 });
 router();
 
-navController.highlightActiveLink(window.location.pathname.slice(1));
-
-(() => {
- new MessageController();
-})();
+new NavigationController();
+new MessageController();
+// new NewMessageController();
+new ActionsController();

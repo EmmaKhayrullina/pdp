@@ -1,27 +1,24 @@
 import Controller from "../lib/controller";
+import NewMessageView from "../views/newMessageView";
+import { PATHS } from "../helpers/paths";
 
-class NewMessageController extends Controller {
+export default class NewMessageController extends Controller {
   constructor() {
     super();
-    this.form = this.wrapper.find(".form");
-    this.closeBtn = this.form.find(".form__link");
-    this.setUpListeners();
+    this.newMsgView = new NewMessageView();
+    this.newMsgView.on("message:create", this.createNewMessage.bind(this));
+    // this.newMsgModel.on("change", this.updateModel.bind(this));
   }
 
-  setUpListeners() {
-    this.closeBtn.on("click", this.closeForm.bind(this));
+  createNewMessage(data) {
+    let item = this.addMessage(data.title, data.text);
+
+    if (PATHS.isDraft()) {
+      this.newMsgView.showNewMessageOnList(item);
+    }
   }
 
-  toggleForm() {
-    this.form.stop(true, true).slideToggle();
-  }
-
-  closeForm(e) {
-    e.preventDefault();
-    this.toggleForm();
-    this.wrapper.find("[data-action='new']").removeClass("button--disable");
+  toggleMsgForm() {
+    this.newMsgView.toggleForm();
   }
 }
-
-const newMsgController = new NewMessageController();
-export { newMsgController, NewMessageController };

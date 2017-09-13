@@ -1,27 +1,32 @@
 import Controller from "../lib/controller";
+import MessageListModel from "../models/messageListModel";
+import MessageListView from "../views/messageListView";
 
-class ListController extends Controller {
+export default class MessageListController extends Controller {
   constructor() {
     super();
-    this.msgList = this.wrapper.find(".msg-list");
+    this.msgListModel = new MessageListModel();
+    this.msgListView = new MessageListView();
+  }
+
+  showList(listName) {
+    const listData = this.msgListModel.fiterMessages(listName);
+    this.msgListView.renderMessageList(listData);
   }
 
   showInbox() {
-    this.showList(this.msgList, "inbox" || "starred");
+    this.showList("inbox" || "starred");
   }
 
   showStarred() {
-    this.showList(this.msgList, "starred");
+    this.showList("starred");
   }
 
   showDeleted() {
-    this.showList(this.msgList, "deleted");
+    this.showList("deleted");
   }
 
   showDraft() {
-    this.showList(this.msgList, "draft");
+    this.showList("draft");
   }
 }
-
-const listController = new ListController();
-export { listController, ListController };

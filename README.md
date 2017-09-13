@@ -1,7 +1,7 @@
 Test app
 -
 
-- Clone this repo: `git@github.com:EmmaKhayrullina/pdp.git`
+- Clone this repo: `git clone git@github.com:EmmaKhayrullina/pdp.git`
 
 - Run setup: `yarn install`
 

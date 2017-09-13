@@ -1,40 +1,18 @@
-import { storage, Storage } from "../helpers/storage";
+import $ from "jquery";
+import { storage } from "../helpers/storage";
 import Model from "./model";
 import View from "./view";
 import messageTemplate from "../../templates/partials/message.pug";
 
 export default class Controller {
   constructor() {
-    this.state = storage.get();
-    this.model = new Model(this.state || undefined);
+    this.model = new Model();
     this.view = new View();
-    this.wrapper = $(".container");
-    this.setUpEventListener();
+    // this.model.on("change", this.updateModel.bind(this));
   }
 
-  setUpEventListener() {
-    this.model.on("change", () => storage.set(this.model.getData()));
-  }
-
-  fiterMessages(status) {
-    const messages = this.model.getData() || [];
-    const arr = [];
-    messages.forEach(
-      msg => {
-      if(msg[status]) {
-        arr.push(msg)
-      }
-    });
-    return arr;
-  }
-
-  showList(listSelector, listName) {
-    const listData = this.fiterMessages(listName);
-    this.view.clear(listSelector);
-
-    listData.forEach(msg =>
-      listSelector.append(this.view.render(messageTemplate, {msg}))
-    );
+  updateModel(state) {
+    storage.set(state);
   }
 
   addMessage(title, text) {
@@ -50,12 +28,9 @@ export default class Controller {
     });
   }
 
-  moveTo(id, propArr, status) {
+  moveTo(id, propObj, status) {
     const item = this.model.get(id);
     item["status"] = [status];
-    propArr.forEach(prop => {
-      this.model.update(id, prop);
-    });
-    this.wrapper.find(`[data-id=${id}]`).remove();
+    this.model.update(id, propObj);
   }
 }
