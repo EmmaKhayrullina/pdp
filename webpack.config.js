@@ -11,10 +11,18 @@ const PATHS = {
 };
 
 const config = {
-  entry: PATHS.app + "/js/application.js",
+  resolve: {
+    modules: [
+      path.resolve("app"),
+      "node_modules"
+    ],
+    extensions: [".js", ".css"]
+  },
+
+  entry: path.resolve("app", "js/application.js"),
 
   output: {
-    path: PATHS.build,
+    path: path.resolve("build"),
     filename: "js/[name].js"
   },
   

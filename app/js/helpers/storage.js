@@ -16,4 +16,5 @@ class Storage {
 }
 
 const storage = new Storage("messages");
-export { storage, Storage };
+const state = storage.get() || undefined;
+export { storage, Storage, state };

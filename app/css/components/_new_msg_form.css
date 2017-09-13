@@ -1,12 +1,17 @@
 .form {
   position: fixed;
-  bottom: 0;
   right: 0;
+  bottom: -150%;
   max-width: 450px;
   padding: 20px;
   background: $color-background;
   border: 1px solid $color-border;
   border-radius: 3px;
+  transition: bottom 0.4s;
+
+  &--active {
+    bottom: 0;
+  }
 
   &__head {
     margin-bottom: 10px;
