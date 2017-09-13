@@ -1,96 +1,63 @@
 import Controller from "../lib/controller";
-import { notification, Notifications } from "../shared/notifications";
+import { pagePath } from "../helpers/paths";
 
-class MessageController extends Controller {
-  constructor() {
+export default class MessageController extends Controller {
+  constructor(msgView) {
     super();
-    this.msg = this.wrapper.find(".msg-item");
-    this.actionLink = this.msg.find(".msg-link");
-    this.msgCheckbox = this.wrapper.find(".msg-item__checkbox");
-    this.setUpListeners();
+    this.msgView = msgView;
+
+    this.msgView.on("message:star", this.moveToStarred.bind(this));
+    this.msgView.on("message:delete", this.moveToDeleted.bind(this));
+    this.msgView.on("message:inbox", this.moveToInbox.bind(this));
+    this.msgView.on("message:check", this.changeMessageFlag.bind(this));
   }
 
-  setUpListeners() {
-    this.actionLink.on("click", this.msgActions.bind(this));
-  }
-
-  msgActions(e) {
-    e.preventDefault();
-    const link = $(e.target);
-    const msg = link.closest(".msg-item");
-    const id = msg.data("id");
-
-    if (link.hasClass("msg-link--toggle")) {
-      this.toggleMessage(link, msg);
-    }
-    if (link.hasClass("msg-link--star")) {
-      this.moveToStarred(id);
-    }
-    if (link.hasClass("msg-link--back")) {
-      this.moveToInbox(id);
-    }
-    if (link.hasClass("msg-link--remove")) {
-      this.moveToDeleted(id);
-    }
-  }
-
-  toggleMessage(link, msg) {
-    msg.find(".msg-item__text").stop(true, true).slideToggle();
-    link.toggleClass("msg-link--open");
-  }
-
-  moveToStarred(id) {
-    const item = this.model.get(id);
-    const currentMsg = this.wrapper.find(`[data-id=${id}]`);
-    const starIcon = currentMsg.find(".msg-link--star");
-
+  moveToStarred(item) {
     if (!item.starred) {
-      item.status.push("starred");
-      notification.show("Status changed!");
+      this.starMessage(item);
+      this.msgView.notify("Moved to starred!");
+    } else {
+      this.unstarMessage(item);
+      this.msgView.notify("Removed from starred!");
     }
-    if (item.starred) {
-      const index = item.status.indexOf("starred");
-      if (index > -1) {
-        item.status.splice(index, 1);
-        notification.show("Status changed!");
-      }
+  }
 
-      if (window.location.pathname == "/starred") {
-        currentMsg.remove();
-      }
+  starMessage(item) {
+    const changeProps = { "starred": true };
+    const status = ["inbox", "starred"];
+    this.moveTo(item, changeProps, status);
+  }
+
+  unstarMessage(item) {
+    const changeProps = { "starred": false };
+    this.moveTo(item, changeProps, "inbox");
+  }
+
+  moveToInbox(item) {
+    const changeProps = {
+      "inbox": true,
+      "deleted": false
+    };
+    this.moveTo(item, changeProps, "inbox");
+    this.msgView.notify("Back to inbox!");
+  }
+
+  moveToDeleted(item) {
+    if (pagePath.isDeleted() && item.deleted) {
+      this.model.remove(item.id);
+      this.msgView.notify("Deleted!");
+    } else {
+      const changeProps = {
+        "deleted": true,
+        "inbox": false,
+        "starred": false
+      };
+      this.moveTo(item, changeProps, "deleted");
+      this.msgView.notify("Moved to trash!");
     }
-
-    starIcon.toggleClass("msg-link--marked");
-    this.model.update(id, "starred");
   }
 
-  moveToInbox(id) {
-    const changePropArr = ["inbox", "deleted"];
-    this.moveTo(id, changePropArr, "inbox");
-    notification.show("Back to inbox!");
-  }
-
-  moveToDeleted(id) {
-    const changePropArr = ["deleted", "inbox", "starred"];
-    this.moveTo(id, changePropArr, "deleted");
-    notification.show("Moved to trash!");
-  }
-
-  checkedMessages() {
-    const arr = [];
-    Array.from(this.msgCheckbox).forEach(checkbox => {
-      if ($(checkbox).is(":checked")) {
-        arr.push(checkbox);
-      }
-    });
-    return arr;
-  }
-
-  changeMessageCheckbox(value) {
-    console.log(this.msgCheckbox);
-    this.msgCheckbox.prop("checked", value);
+  changeMessageFlag(item) {
+    this.model.update(item.id, { "checked": !item.checked });
   }
 }
-
-const msgController = new MessageController();
-export { msgController, MessageController };

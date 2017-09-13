@@ -1,6 +1,13 @@
-class Notifications {
+import $ from "jquery";
+
+export default class Notifications {
   constructor(el) {
     this.notifyElement = el;
+    this.setUpListeners();
+  }
+
+  setUpListeners() {
+    this.notifyElement.on("click", this.hide.bind(this));
   }
 
   show(message) {
@@ -14,6 +21,3 @@ class Notifications {
     this.notifyElement.removeClass("notification--active");
   }
 }
-
-const notification = new Notifications($(".notification"))
-export { notification, Notifications };

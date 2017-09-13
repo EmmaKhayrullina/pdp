@@ -6,7 +6,8 @@
     "inbox": true,
     "starred": true,
     "deleted": false,
-    "draft": false
+    "draft": false,
+    "checked": false
   },
   {
     "id": 2,
@@ -16,7 +17,8 @@
     "inbox": true,
     "starred": true,
     "deleted": false,
-    "draft": false
+    "draft": false,
+    "checked": false
   },
   {
     "id": 3,
@@ -26,7 +28,8 @@
     "inbox": true,
     "starred": true,
     "deleted": false,
-    "draft": false
+    "draft": false,
+    "checked": false
   },
   {
     "id": 4,
@@ -36,7 +39,8 @@
     "inbox": true,
     "starred": false,
     "deleted": false,
-    "draft": false
+    "draft": false,
+    "checked": false
   },
   {
     "id": 5,
@@ -46,7 +50,8 @@
     "inbox": true,
     "starred": false,
     "deleted": false,
-    "draft": false
+    "draft": false,
+    "checked": false
   },
   {
     "id": 6,
@@ -56,7 +61,8 @@
     "inbox": true,
     "starred": false,
     "deleted": false,
-    "draft": false
+    "draft": false,
+    "checked": false
   },
   {
     "id": 7,
@@ -66,7 +72,8 @@
     "inbox": true,
     "starred": false,
     "deleted": false,
-    "draft": false
+    "draft": false,
+    "checked": false
   },
   {
     "id": 8,
@@ -76,7 +83,8 @@
     "inbox": true,
     "starred": false,
     "deleted": false,
-    "draft": false
+    "draft": false,
+    "checked": false
   },
   {
     "id": 9,
@@ -86,7 +94,8 @@
     "inbox": false,
     "starred": false,
     "deleted": false,
-    "draft": true
+    "draft": true,
+    "checked": false
   },
   {
     "id": 10,
@@ -96,7 +105,8 @@
     "inbox": false,
     "starred": false,
     "deleted": false,
-    "draft": true
+    "draft": true,
+    "checked": false
   },
   {
     "id": 11,
@@ -106,7 +116,8 @@
     "inbox": true,
     "starred": false,
     "deleted": false,
-    "draft": false
+    "draft": false,
+    "checked": false
   },
   {
     "id": 12,
@@ -116,7 +127,8 @@
     "inbox": true,
     "starred": false,
     "deleted": false,
-    "draft": false
+    "draft": false,
+    "checked": false
   },
   {
     "id": 13,
@@ -126,7 +138,8 @@
     "inbox": false,
     "starred": false,
     "deleted": false,
-    "draft": true
+    "draft": true,
+    "checked": false
   },
   {
     "id": 14,
@@ -136,7 +149,8 @@
     "inbox": true,
     "starred": false,
     "deleted": false,
-    "draft": false
+    "draft": false,
+    "checked": false
   },
   {
     "id": 15,
@@ -146,7 +160,8 @@
     "inbox": true,
     "starred": false,
     "deleted": false,
-    "draft": false
+    "draft": false,
+    "checked": false
   },
   {
     "id": 16,
@@ -156,7 +171,8 @@
     "inbox": false,
     "starred": false,
     "deleted": false,
-    "draft": true
+    "draft": true,
+    "checked": false
   },
   {
     "id": 17,
@@ -166,7 +182,8 @@
     "inbox": false,
     "starred": false,
     "deleted": true,
-    "draft": false
+    "draft": false,
+    "checked": false
   },
   {
     "id": 18,
@@ -176,7 +193,8 @@
     "inbox": false,
     "starred": false,
     "deleted": true,
-    "draft": false
+    "draft": false,
+    "checked": false
   },
   {
     "id": 19,
@@ -186,7 +204,8 @@
     "inbox": true,
     "starred": false,
     "deleted": false,
-    "draft": false
+    "draft": false,
+    "checked": false
   },
   {
     "id": 20,
@@ -196,6 +215,7 @@
     "inbox": false,
     "starred": false,
     "deleted": true,
-    "draft": false
+    "draft": false,
+    "checked": false
   }
 ]
